@@ -174,11 +174,13 @@
         function updateLoanAndEnergyOutput() {
             const capacityAC = parseFloat(document.getElementById("capacityAC").value);
             const unitGeneration = parseFloat(document.getElementById("unitGeneration").value);
-            const loanAmount = parseFloat(document.getElementById("loanAmount").value);
+            let loanAmount = parseFloat(document.getElementById("loanAmount").value);
 
-            // Calculate Loan Amount with the updated formula (capacityAC * ₹3,00,00,000)
-            const calculatedLoanAmount = 30000000 * capacityAC;
-            document.getElementById("loanAmount").value = calculatedLoanAmount;
+            // Recalculate Loan Amount based on Capacity in MW (AC) if the user hasn't manually edited the Loan Amount
+            if (!document.getElementById("loanAmount").dataset.userChanged) {
+                loanAmount = 30000000 * capacityAC;  // Formula: ₹ 3,00,00,000 * Capacity in MW (AC)
+                document.getElementById("loanAmount").value = loanAmount;
+            }
 
             // Calculate Capacity in MW (DC)
             const capacityDCValue = capacityAC + (capacityAC * 0.25);  // DC capacity is AC capacity + 25%
@@ -201,7 +203,7 @@
             // Get input values
             const capacityAC = parseFloat(document.getElementById("capacityAC").value);
             const unitGeneration = parseFloat(document.getElementById("unitGeneration").value);
-            const loanAmount = parseFloat(document.getElementById("loanAmount").value);
+            let loanAmount = parseFloat(document.getElementById("loanAmount").value);
             const interestRate = parseFloat(document.getElementById("interestRate").value) / 100;
             const loanTerm = 10;  // Loan term fixed to 10 years
             const pricePerKWh = parseFloat(document.getElementById("pricePerKWh").value);
@@ -288,7 +290,12 @@
 
         // Add event listeners to input fields to update calculations
         document.querySelectorAll("input").forEach(function(input) {
-            input.addEventListener("input", updateLoanAndEnergyOutput);
+            input.addEventListener("input", function(event) {
+                if (event.target.id === "loanAmount") {
+                    event.target.dataset.userChanged = true;  // Mark loan amount as manually edited
+                }
+                updateLoanAndEnergyOutput();
+            });
         });
     </script>
 
