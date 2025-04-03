@@ -12,7 +12,7 @@
             background-color: #f4f4f4;
         }
         .container {
-            max-width: 1200px; /* Increase container width */
+            max-width: 1200px;
             margin: 0 auto;
             background-color: #fff;
             padding: 20px;
@@ -28,12 +28,12 @@
         }
         input[type="number"], input[type="text"] {
             width: 100%;
-            padding: 10px 15px; /* Added padding to the left and right */
+            padding: 10px 15px;
             margin: 10px 0;
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 16px;
-            box-sizing: border-box; /* Ensures padding doesn't affect input width */
+            box-sizing: border-box;
         }
         button {
             width: 100%;
@@ -51,11 +51,11 @@
         table {
             width: 100%;
             margin-top: 20px;
-            border-collapse: collapse; /* Collapsing borders */
-            table-layout: fixed; /* Fixed layout to prevent column width issues */
+            border-collapse: collapse;
+            table-layout: fixed;
         }
         table, th, td {
-            border: 1px solid #ddd; /* Adding borders to the table, headers, and cells */
+            border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
         }
@@ -63,7 +63,7 @@
             background-color: #f2f2f2;
         }
         td {
-            white-space: nowrap; /* Prevent wrapping of cell content */
+            white-space: nowrap;
         }
         .bold {
             font-weight: bold;
@@ -77,23 +77,27 @@
             overflow-x: auto;
             margin-top: 20px;
         }
-
-        /* Responsive Styles */
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .form-row > div {
+            flex: 1;
+            min-width: 300px;
+        }
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
                 max-width: 100%;
             }
-
             input[type="number"], input[type="text"], button {
                 padding: 8px;
                 font-size: 14px;
             }
-
             table {
                 font-size: 12px;
             }
-
             th, td {
                 padding: 6px;
             }
@@ -103,15 +107,12 @@
             table {
                 font-size: 10px;
             }
-
             th, td {
                 padding: 4px;
             }
-
             button {
                 font-size: 16px;
             }
-
             input[type="number"], input[type="text"] {
                 font-size: 14px;
                 padding: 6px;
@@ -124,33 +125,41 @@
     <div class="container">
         <h2>Solar Plant Revenue Calculator</h2>
 
-        <label for="capacity">Capacity in MW:</label>
-        <input type="number" id="capacity" placeholder="Enter plant capacity in MW" value="1" required>
+        <div class="form-row">
+            <div>
+                <label for="capacityAC">Capacity in MW (AC):</label>
+                <input type="number" id="capacityAC" step="0.1" placeholder="Enter capacity in MW (AC)" value="1" required>
 
-        <label for="loanAmount">Loan Amount (₹):</label>
-        <input type="text" id="loanAmount" placeholder="Loan amount" readonly>
-        <p class="info">Formula: Loan Amount = 27,500,000 * Capacity in MW</p>
+                <label for="unitGeneration">Unit Generation per Day / 1 MW (kWh):</label>
+                <input type="number" id="unitGeneration" placeholder="Enter unit generation per day per MW" value="4500" required>
 
-        <label for="unitGeneration">Unit Generation per Day / 1 MW (kWh):</label>
-        <input type="number" id="unitGeneration" placeholder="Enter unit generation per day per MW" value="4500" required>
+                <label for="loanAmount">Loan Amount (₹):</label>
+                <input type="number" id="loanAmount" placeholder="Loan amount" value="30000000" required>
+                <p class="info">Formula: Loan Amount = ₹ 3,00,00,000 * Capacity in MW (AC)</p>
 
-        <label for="energyOutput">Energy Output per Year (kWh):</label>
-        <input type="text" id="energyOutput" placeholder="Energy Output per Year" readonly>
-        <p class="info" id="energyOutputFormula">Formula: Energy Output per Year = Unit generation per day * (Capacity in MW + (Capacity in MW * 25%)) * 365</p>
+                <label for="interestRate">Annual Interest Rate (%):</label>
+                <input type="number" id="interestRate" placeholder="Enter interest rate" value="11" step="0.1" required>
 
-        <label for="interestRate">Annual Interest Rate (%):</label>
-        <input type="number" id="interestRate" placeholder="Enter interest rate" value="11" step="0.1" required>
+                <label for="loanTerm">Loan Term (Years):</label>
+                <input type="number" id="loanTerm" placeholder="Loan Term (Always 10 years)" value="10" disabled>
 
-        <label for="loanTerm">Loan Term (Years):</label>
-        <input type="number" id="loanTerm" placeholder="Loan Term (Always 10 years)" value="10" disabled>
+                <label for="pricePerKWh">Price per kWh (₹):</label>
+                <input type="number" id="pricePerKWh" placeholder="Enter price per kWh" value="3.11" step="0.01" required>
 
-        <label for="pricePerKWh">Price per kWh (₹):</label>
-        <input type="number" id="pricePerKWh" placeholder="Enter price per kWh" value="3.11" step="0.01" required>
+                <label for="expenses">Annual Operational Costs (₹) in 1st year:</label>
+                <input type="number" id="expenses" placeholder="Enter annual operational costs for the 1st year" value="500000" required>
+            </div>
 
-        <label for="expenses">Annual Operational Costs (₹) in 1st year:</label>
-        <input type="number" id="expenses" placeholder="Enter annual operational costs for the 1st year" value="500000" required>
+            <div>
+                <label for="capacityDC">Capacity in MW (DC):</label>
+                <span id="capacityDC">-</span>  <!-- Display value, not an input field -->
+                <p class="info">Formula: Capacity in MW (DC) = Capacity in MW (AC) + (Capacity in MW (AC) × 25%)</p>
 
-        <button onclick="calculateRevenue()">Calculate Revenue</button>
+                <label for="unitGenerationYear">Unit Generation per Year (kWh):</label>
+                <span id="unitGenerationYear">-</span>  <!-- Display value, not an input field -->
+                <p class="info" id="unitGenerationYearFormula">Formula: Unit Generation per Year = Unit generation per day * (Capacity in MW (AC) + (Capacity in MW (AC) × 25%)) * 350</p>
+            </div>
+        </div>
 
         <div id="resultTable" class="table-container"></div>
     </div>
@@ -161,54 +170,66 @@
             return '₹ ' + amount.toLocaleString('en-IN');
         }
 
-        // Function to calculate and update Loan Amount and Energy Output per Year
+        // Function to calculate and update Loan Amount and Energy Output
         function updateLoanAndEnergyOutput() {
-            const capacity = parseFloat(document.getElementById("capacity").value);
+            const capacityAC = parseFloat(document.getElementById("capacityAC").value);
             const unitGeneration = parseFloat(document.getElementById("unitGeneration").value);
+            const loanAmount = parseFloat(document.getElementById("loanAmount").value);
 
-            // Calculate Loan Amount
-            const loanAmount = 27500000 * capacity;
-            document.getElementById("loanAmount").value = formatCurrency(loanAmount);  // Update loan amount field
+            // Calculate Loan Amount with the updated formula (capacityAC * ₹3,00,00,000)
+            const calculatedLoanAmount = 30000000 * capacityAC;
+            document.getElementById("loanAmount").value = calculatedLoanAmount;
 
-            // Calculate Energy Output per Year
-            const yearlyEnergyOutput = unitGeneration * (capacity + (capacity * 0.25)) * 365; // Adjusted for Energy Output per Year
-            document.getElementById("energyOutput").value = Math.round(yearlyEnergyOutput);  // Update energy output field
+            // Calculate Capacity in MW (DC)
+            const capacityDCValue = capacityAC + (capacityAC * 0.25);  // DC capacity is AC capacity + 25%
+            document.getElementById("capacityDC").textContent = capacityDCValue.toFixed(2);  // Display capacity DC value
 
-            // Update the energy output formula dynamically
-            const energyFormula = `Formula: Energy Output per Year = Unit generation per day * (${capacity} + (${capacity} * 25%)) * 365`;
-            document.getElementById("energyOutputFormula").textContent = energyFormula;
+            // Calculate Unit Generation per Year with 350 days instead of 365
+            const yearlyUnitGeneration = unitGeneration * (capacityAC + (capacityAC * 0.25)) * 350; // Adjusted for Unit Generation per Year with 350 days
+            document.getElementById("unitGenerationYear").textContent = Math.round(yearlyUnitGeneration);  // Display unit generation value
+
+            // Update the unit generation formula dynamically
+            const energyFormula = `Formula: Unit Generation per Year = Unit generation per day * (${capacityAC} + (${capacityAC} * 25%)) * 350`;
+            document.getElementById("unitGenerationYearFormula").textContent = energyFormula;
+
+            // Generate the revenue table
+            generateRevenueTable();
         }
 
-        // Function to calculate and display energy output and revenue
-        function calculateRevenue() {
+        // Function to generate and display energy output and revenue table
+        function generateRevenueTable() {
             // Get input values
-            const capacity = parseFloat(document.getElementById("capacity").value);
+            const capacityAC = parseFloat(document.getElementById("capacityAC").value);
             const unitGeneration = parseFloat(document.getElementById("unitGeneration").value);
-            const loanAmountPerMW = 27500000; // Fixed loan amount per 1 MW
+            const loanAmount = parseFloat(document.getElementById("loanAmount").value);
             const interestRate = parseFloat(document.getElementById("interestRate").value) / 100;
             const loanTerm = 10;  // Loan term fixed to 10 years
             const pricePerKWh = parseFloat(document.getElementById("pricePerKWh").value);
             let expenses = parseFloat(document.getElementById("expenses").value);
 
-            if (isNaN(capacity) || isNaN(unitGeneration) || isNaN(loanAmountPerMW) || isNaN(interestRate) || isNaN(pricePerKWh) || isNaN(expenses)) {
+            if (isNaN(capacityAC) || isNaN(unitGeneration) || isNaN(loanAmount) || isNaN(interestRate) || isNaN(pricePerKWh) || isNaN(expenses)) {
                 alert("Please fill in all fields with valid numbers.");
                 return;
             }
 
             // EMI calculation using the EMI formula (fixed for 10 years)
-            const loanAmount = loanAmountPerMW * capacity;
             const monthlyInterestRate = interestRate / 12;
             const months = loanTerm * 12;
             const emi = (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, months)) / (Math.pow(1 + monthlyInterestRate, months) - 1);
 
             // Create a table to display the results
             let resultHtml = "<h3>Yearly Revenue Breakdown (for 25 Years)</h3>";
-            resultHtml += "<table><tr><th>Year</th><th>Units Generated (↓ 0.8%/year)</th><th>Revenue</th><th>Annual Operational Costs (6% ↑/year)</th><th>Fixed EMI Payments</th><th>Total Costs</th><th>Total Savings</th></tr>";
+            resultHtml += "<table><tr><th>Year</th><th>Units Generated (↓ 0.8%/year)</th><th>Revenue</th><th>Annual Operational Costs (↑ 6%/year)</th><th>Fixed EMI Payments</th><th>Total Costs</th><th>Total Savings</th></tr>";
 
             const totalEmiPerYear = emi * 12;  // EMI paid annually
             let totalEmiPaid = 0;
+            let totalRevenue = 0;
+            let totalExpenses = 0;
+            let totalEmiPayments = 0;
+            let totalTotalCosts = 0;
+            let totalSavings = 0;
 
-            let unitsGeneratedFirstYear = unitGeneration * (capacity + (capacity * 0.25)) * 365; // Units Generated for the first year
+            let unitsGeneratedFirstYear = unitGeneration * (capacityAC + (capacityAC * 0.25)) * 350; // Units Generated for the first year
 
             for (let year = 1; year <= 25; year++) {
                 // For the 2nd year onwards, apply 6% annual increase in Operational Costs
@@ -227,7 +248,14 @@
 
                 // Total Costs: Annual Operational Costs + Fixed EMI Payments
                 const totalCosts = expenses + fixedEmiPayment;  // Total Costs = Operational Costs + EMI Payments
-                const totalSavings = revenue - totalCosts;  // Total Savings = Revenue - Total Costs
+                const totalYearlySavings = revenue - totalCosts;  // Total Savings = Revenue - Total Costs
+
+                // Add values to the totals
+                totalRevenue += revenue;
+                totalExpenses += expenses;
+                totalEmiPayments += fixedEmiPayment;
+                totalTotalCosts += totalCosts;
+                totalSavings += totalYearlySavings;
 
                 resultHtml += `<tr>
                     <td>${year}</td>
@@ -236,37 +264,32 @@
                     <td>${formatCurrency(Math.round(expenses))}</td>
                     <td>${year <= 10 ? formatCurrency(Math.round(fixedEmiPayment)) : "₹ 0"}</td>
                     <td class="bold">${formatCurrency(Math.round(totalCosts))}</td>
-                    <td class="bold">${formatCurrency(Math.round(totalSavings))}</td>
+                    <td class="bold">${formatCurrency(Math.round(totalYearlySavings))}</td>
                 </tr>`;
             }
+
+            // Add footer row for totals
+            resultHtml += `<tfoot><tr><td colspan="2"><strong>Total</strong></td>
+                            <td><strong>${formatCurrency(Math.round(totalRevenue))}</strong></td>
+                            <td><strong>${formatCurrency(Math.round(totalExpenses))}</strong></td>
+                            <td><strong>${formatCurrency(Math.round(totalEmiPayments))}</strong></td>
+                            <td><strong>${formatCurrency(Math.round(totalTotalCosts))}</strong></td>
+                            <td><strong>${formatCurrency(Math.round(totalSavings))}</strong></td>
+                        </tr></tfoot>`;
+
             resultHtml += "</table>";
 
             // Show the result table
             document.getElementById("resultTable").innerHTML = resultHtml;
         }
 
-        // Update values when Capacity or Unit Generation is changed
-        window.onload = function() {
-            updateLoanAndEnergyOutput();
-            calculateRevenue();  // Generate table on page load
+        // Call this function initially to update everything on load
+        updateLoanAndEnergyOutput();
 
-            // Attach event listener to Capacity field to update values on change
-            document.getElementById("capacity").addEventListener("input", () => { 
-                updateLoanAndEnergyOutput();
-                calculateRevenue(); 
-            });
-
-            // Attach event listener to Unit Generation field to update values on change
-            document.getElementById("unitGeneration").addEventListener("input", () => { 
-                updateLoanAndEnergyOutput();
-                calculateRevenue(); 
-            });
-
-            // Attach event listener to other fields to update the values on change
-            document.getElementById("interestRate").addEventListener("input", calculateRevenue);
-            document.getElementById("pricePerKWh").addEventListener("input", calculateRevenue);
-            document.getElementById("expenses").addEventListener("input", calculateRevenue);
-        };
+        // Add event listeners to input fields to update calculations
+        document.querySelectorAll("input").forEach(function(input) {
+            input.addEventListener("input", updateLoanAndEnergyOutput);
+        });
     </script>
 
 </body>
